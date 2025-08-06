@@ -1,0 +1,59 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+class Inputapp extends StatelessWidget {
+  Inputapp({super.key, required this.data, required this.control});
+  final String data;
+  final TextEditingController control;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(2),
+      child: TextFormField(
+        controller: control,
+        textAlign: TextAlign.center,
+        //"التحقق من صحة الإدخال إذا كان الحقل فارغ، يظهر رسالة خطأ "فارغ 
+        validator: (value) {
+          if (value!.isEmpty) {
+            return "فارغ";
+          }
+          return null;
+        },
+        // التنقل بين الحقول تلقائيًا
+        onChanged: (value) {
+          if (data == "start") {
+            if (value.length == 1) {
+              FocusScope.of(context).nextFocus();
+            }
+          }
+          if (data == "center") {
+            if (value.length == 1) {
+              FocusScope.of(context).nextFocus();
+            }
+            if (value.length == 0) {
+              FocusScope.of(context).previousFocus();
+            }
+          }
+          if (data == "end") {
+            if (value.length == 0) {
+              FocusScope.of(context).previousFocus();
+            }
+          }
+        },
+        //تحديد نوع الإدخال ويقبل فقط الأرقام (0-9) باستخدام RegExp
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'\d')),
+        ],
+        
+        maxLength: 1,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+            hintText: "*",
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
+      ),
+    );
+  }
+}
